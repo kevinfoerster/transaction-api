@@ -63,7 +63,11 @@ const expenses = [
   'WELLNESS WAREHOUSE 123456*1234',
   'WOOLWORTHS 123456*1234',
 ];
-
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
+};
 // Docs on event and context https://www.netlify.com/docs/functions/#the-handler-method
 const handler = async (event) => {
   const month = (new Date().getMinutes() % 5) + 1;
@@ -83,7 +87,15 @@ const handler = async (event) => {
       }),
     };
   } catch (error) {
-    return { statusCode: 500, body: error.toString() };
+    return {
+      statusCode: 500,
+      body: error.toString(),
+      headers: {
+        ...headers,
+        'content-type': 'application/json',
+        'cache-control': 'Cache-Control: max-age=300, public',
+      },
+    };
   }
 };
 
