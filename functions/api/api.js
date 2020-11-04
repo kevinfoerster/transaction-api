@@ -71,19 +71,32 @@ const headers = {
 // Docs on event and context https://www.netlify.com/docs/functions/#the-handler-method
 const handler = async (event) => {
   const month = (new Date().getMinutes() % 5) + 1;
+  const includeIncome = Math.random() < 0.3;
+  const transactions = new Array(Math.floor(Math.random() * 20 + 1))
+    .fill(Math.floor(Math.random() * expenses.length))
+    .map(() => ({
+      amount: Math.floor(Math.random() * 1500 * -1),
+      description: expenses[Math.floor(Math.random() * expenses.length)],
+      date: new Date(
+        `${month}/${Math.ceil(Math.random() * 27)}/20`
+      ).toISOString(),
+    }));
+
+  if (includeIncome) {
+    transactions.push({
+      amount: Math.floor(Math.random() * 15000),
+      description: income[Math.floor(Math.random() * income.length)],
+      date: new Date(
+        `${month}/${Math.ceil(Math.random() * 27)}/20`
+      ).toISOString(),
+    });
+  }
+
   try {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        transactions: new Array(Math.floor(Math.random() * 20 + 1))
-          .fill(Math.floor(Math.random() * expenses.length))
-          .map(() => ({
-            amount: Math.floor(Math.random() * 1500 * -1),
-            description: expenses[Math.floor(Math.random() * expenses.length)],
-            date: new Date(
-              `${month}/${Math.ceil(Math.random() * 27)}/20`
-            ).toISOString(),
-          })),
+        transactions,
       }),
       headers: {
         ...headers,
