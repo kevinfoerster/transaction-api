@@ -85,6 +85,11 @@ const handler = async (event) => {
             ).toISOString(),
           })),
       }),
+      headers: {
+        ...headers,
+        'content-type': 'application/json',
+        'cache-control': 'Cache-Control: max-age=300, public',
+      },
     };
   } catch (error) {
     return {
