@@ -67,26 +67,20 @@ const expenses = [
 // Docs on event and context https://www.netlify.com/docs/functions/#the-handler-method
 const handler = async (event) => {
   const month = (new Date().getMinutes() % 5) + 1;
-  const year = 2020;
   try {
-    const subject = event.queryStringParameters.name || 'World';
     return {
       statusCode: 200,
       body: JSON.stringify({
         transactions: new Array(Math.floor(Math.random() * 20 + 1))
           .fill(Math.floor(Math.random() * expenses.length))
           .map(() => ({
-            amount: Math.floor(Math.random() * 1500),
+            amount: Math.floor(Math.random() * 1500 * -1),
             description: expenses[Math.floor(Math.random() * expenses.length)],
-            data: `${month}/${Math.ceil(Math.random() * 27)}/20`,
             date: new Date(
               `${month}/${Math.ceil(Math.random() * 27)}/20`
             ).toISOString(),
           })),
       }),
-      // // more keys you can return:
-      // headers: { "headerName": "headerValue", ... },
-      // isBase64Encoded: true,
     };
   } catch (error) {
     return { statusCode: 500, body: error.toString() };
